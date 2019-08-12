@@ -8,25 +8,24 @@ import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 @Entity
-@Table(name = "medicalcenter")
+@Table(name = "region")
 @EntityListeners(AuditingEntityListener.class)
-public class MedicalCenter {
+public class Region {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "RegionId", referencedColumnName = "Id")
-    private Region regionId;
+    @Column(name = "CompanyId")
+    private Long companyId;
 
     @NotBlank
-    @Column(name = "CenterCode")
-    private String centerCode;
+    @Column(name = "RegionCode")
+    private String regionCode;
 
     @NotBlank
-    @Column(name = "CenterName")
-    private String centerName;
+    @Column(name = "RegionName")
+    private String regionName;
 
     @Column(name = "CreatedBy")
     private Long createdBy;
@@ -51,29 +50,28 @@ public class MedicalCenter {
         this.id = id;
     }
 
-    @JsonIgnore
-    public Region getRegionId() {
-        return regionId;
+    public Long getCompanyId() {
+        return companyId;
     }
 
-    public void setRegionId(Region regionId) {
-        this.regionId = regionId;
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
     }
 
-    public String getCenterCode() {
-        return centerCode;
+    public String getRegionCode() {
+        return regionCode;
     }
 
-    public void setCenterCode(String centerCode) {
-        this.centerCode = centerCode;
+    public void setRegionCode(String regionCode) {
+        this.regionCode = regionCode;
     }
 
-    public String getCenterName() {
-        return centerName;
+    public String getRegionName() {
+        return regionName;
     }
 
-    public void setCenterName(String centerName) {
-        this.centerName = centerName;
+    public void setRegionName(String regionName) {
+        this.regionName = regionName;
     }
 
     @JsonIgnore
