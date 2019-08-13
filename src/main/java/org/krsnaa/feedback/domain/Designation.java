@@ -8,25 +8,24 @@ import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 @Entity
-@Table(name = "medicalcenter")
+@Table(name = "designation")
 @EntityListeners(AuditingEntityListener.class)
-public class MedicalCenter {
+public class Designation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "RegionId", referencedColumnName = "Id")
-    private Region regionId;
+    @Column(name = "CompanyId")
+    private Long companyId;
 
     @NotBlank
-    @Column(name = "CenterCode")
-    private String centerCode;
+    @Column(name = "DesignationCode")
+    private String designationCode;
 
     @NotBlank
-    @Column(name = "CenterName")
-    private String centerName;
+    @Column(name = "DesignationName")
+    private String designationName;
 
     @Column(name = "CreatedBy")
     private Long createdBy;
@@ -50,29 +49,28 @@ public class MedicalCenter {
         this.id = id;
     }
 
-    @JsonIgnore
-    public Region getRegionId() {
-        return regionId;
+    public Long getCompanyId() {
+        return companyId;
     }
 
-    public void setRegionId(Region regionId) {
-        this.regionId = regionId;
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
     }
 
-    public String getCenterCode() {
-        return centerCode;
+    public String getDesignationCode() {
+        return designationCode;
     }
 
-    public void setCenterCode(String centerCode) {
-        this.centerCode = centerCode;
+    public void setDesignationCode(String designationCode) {
+        this.designationCode = designationCode;
     }
 
-    public String getCenterName() {
-        return centerName;
+    public String getDesignationName() {
+        return designationName;
     }
 
-    public void setCenterName(String centerName) {
-        this.centerName = centerName;
+    public void setDesignationName(String designationName) {
+        this.designationName = designationName;
     }
 
     @JsonIgnore

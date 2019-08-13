@@ -8,25 +8,20 @@ import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 @Entity
-@Table(name = "medicalcenter")
+@Table(name = "company")
 @EntityListeners(AuditingEntityListener.class)
-public class MedicalCenter {
+public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "RegionId", referencedColumnName = "Id")
-    private Region regionId;
+    @Column(name = "CompanyCode")
+    private String companyCode;
 
     @NotBlank
-    @Column(name = "CenterCode")
-    private String centerCode;
-
-    @NotBlank
-    @Column(name = "CenterName")
-    private String centerName;
+    @Column(name = "CompanyName")
+    private String companyName;
 
     @Column(name = "CreatedBy")
     private Long createdBy;
@@ -50,29 +45,20 @@ public class MedicalCenter {
         this.id = id;
     }
 
-    @JsonIgnore
-    public Region getRegionId() {
-        return regionId;
+    public String getCompanyCode() {
+        return companyCode;
     }
 
-    public void setRegionId(Region regionId) {
-        this.regionId = regionId;
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
     }
 
-    public String getCenterCode() {
-        return centerCode;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setCenterCode(String centerCode) {
-        this.centerCode = centerCode;
-    }
-
-    public String getCenterName() {
-        return centerName;
-    }
-
-    public void setCenterName(String centerName) {
-        this.centerName = centerName;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     @JsonIgnore

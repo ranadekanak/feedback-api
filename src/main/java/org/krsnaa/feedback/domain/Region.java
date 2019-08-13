@@ -41,7 +41,6 @@ public class Region {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
 
-    @JsonIgnore
     public Long getId() {
         return id;
     }
