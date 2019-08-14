@@ -1,45 +1,26 @@
 package org.krsnaa.feedback.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import java.util.Date;
 
 @Entity
 @Table(name = "designation")
 @EntityListeners(AuditingEntityListener.class)
-public class Designation {
+public class Designation extends Audit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Column(name = "CompanyId")
-    private Long companyId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "CompanyId", referencedColumnName = "Id")
+    private Company companyId;
 
-    @NotBlank
     @Column(name = "DesignationCode")
     private String designationCode;
 
-    @NotBlank
     @Column(name = "DesignationName")
     private String designationName;
-
-    @Column(name = "CreatedBy")
-    private Long createdBy;
-
-    @Column(name = "CreatedDate", nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
-
-    @Column(name = "ModifiedBy")
-    private Long modifiedBy;
-
-    @Column(name = "ModifiedDate",nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date modifiedDate;
 
     public Long getId() {
         return id;
@@ -49,11 +30,11 @@ public class Designation {
         this.id = id;
     }
 
-    public Long getCompanyId() {
+    public Company getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(Long companyId) {
+    public void setCompanyId(Company companyId) {
         this.companyId = companyId;
     }
 
@@ -73,39 +54,4 @@ public class Designation {
         this.designationName = designationName;
     }
 
-    @JsonIgnore
-    public Long getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(Long createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    @JsonIgnore
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    @JsonIgnore
-    public Long getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(Long modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-
-    @JsonIgnore
-    public Date getModifiedDate() {
-        return modifiedDate;
-    }
-
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
 }

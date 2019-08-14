@@ -10,14 +10,14 @@ import java.util.Date;
 @Entity
 @Table(name = "region")
 @EntityListeners(AuditingEntityListener.class)
-public class Region {
+public class Region extends Audit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Column(name = "CompanyId")
-    private Long companyId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "CompanyId", referencedColumnName = "Id")
+    private Company companyId;
 
     @NotBlank
     @Column(name = "RegionCode")
@@ -27,20 +27,6 @@ public class Region {
     @Column(name = "RegionName")
     private String regionName;
 
-    @Column(name = "CreatedBy")
-    private Long createdBy;
-
-    @Column(name = "CreatedDate", nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
-
-    @Column(name = "ModifiedBy")
-    private Long modifiedBy;
-
-    @Column(name = "ModifiedDate",nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date modifiedDate;
-
     public Long getId() {
         return id;
     }
@@ -49,11 +35,11 @@ public class Region {
         this.id = id;
     }
 
-    public Long getCompanyId() {
+    public Company getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(Long companyId) {
+    public void setCompanyId(Company companyId) {
         this.companyId = companyId;
     }
 
@@ -73,39 +59,4 @@ public class Region {
         this.regionName = regionName;
     }
 
-    @JsonIgnore
-    public Long getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(Long createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    @JsonIgnore
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    @JsonIgnore
-    public Long getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(Long modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-
-    @JsonIgnore
-    public Date getModifiedDate() {
-        return modifiedDate;
-    }
-
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
 }
