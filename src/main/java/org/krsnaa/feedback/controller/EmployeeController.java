@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/pub/")
@@ -39,9 +40,13 @@ public class EmployeeController {
     @Autowired
     private S3Wrapper awsService;
 
-    @GetMapping("/employees")
-    public List<Employee> getAllEmployees(){
-        return employeeRepository.findAll();
+    @GetMapping("/employees/{id}")
+    public ResponseEntity getEmployee(@PathVariable(name = "id") Long id){
+        Optional<Employee> employee = employeeRepository.findById(id);
+        if(!employee.isPresent()){
+            return ResponseEntity.status(400).body("No Record Found!");
+        }
+        return ResponseEntity.ok(employee.get());
     }
 
     @PostMapping("/employee")
