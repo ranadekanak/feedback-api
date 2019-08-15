@@ -80,6 +80,7 @@ public class EmployeeController {
             employee.setModifiedBy(1L);
             employee.setModifiedDate(new Date());
         } catch(Exception e){
+            e.printStackTrace();
             return ResponseEntity.status(500).body("Profile photo could not be saved");
         }
         return ResponseEntity.ok(employeeRepository.save(employee));
