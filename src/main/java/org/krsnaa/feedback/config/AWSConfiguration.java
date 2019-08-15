@@ -26,7 +26,7 @@ public class AWSConfiguration {
 
 	@Bean
 	public BasicAWSCredentials basicAWSCredentials() {
-		accessKey = accessKey.replace("%", "AKIA").replaceAll("#", "X22XDD").replaceAll("$", "CHB");
+		accessKey = accessKey.replace("%", "AKIA").replaceAll("#", "X22XDD");
 		secretKey = secretKey.replace("%", "wramivs").replace("#", "ThiFyDQ").replace("$", "WsvxdhaW");
 		System.out.print(accessKey + " " + secretKey);
 		return new BasicAWSCredentials(accessKey, secretKey);
