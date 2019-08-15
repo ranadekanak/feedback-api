@@ -20,18 +20,20 @@ public class AWSConfiguration {
 	@Value("${cloud.aws.credentials.secretKey}")
 	private String secretKey;
 
-//	@Value("${cloud.aws.region}")
-//	private String region;
+	@Value("${cloud.aws.region}")
+	private String region;
 
 	@Bean
 	public BasicAWSCredentials basicAWSCredentials() {
+		accessKey = accessKey.replaceAll("%", "A").replaceAll("#", "D").replaceAll("$", "C");
+		secretKey = secretKey.replace("%", "wramivs").replace("#", "ThiFyDQ").replace("$", "WsvxdhaW");
 		return new BasicAWSCredentials(accessKey, secretKey);
 	}
 
 	@Bean
 	public AmazonS3Client amazonS3Client(AWSCredentials awsCredentials) {
 		AmazonS3Client amazonS3Client = new AmazonS3Client(awsCredentials);
-//		amazonS3Client.setRegion(Region.getRegion(Regions.fromName(region)));
+		amazonS3Client.setRegion(Region.getRegion(Regions.fromName(region)));
 		return amazonS3Client;
 	}
 }
