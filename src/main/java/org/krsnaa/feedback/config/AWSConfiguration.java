@@ -1,6 +1,5 @@
 package org.krsnaa.feedback.config;
 
-import java.io.*;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
 import com.amazonaws.auth.AWSCredentials;
@@ -28,7 +27,6 @@ public class AWSConfiguration {
 	public BasicAWSCredentials basicAWSCredentials() {
 		accessKey = accessKey.replace("%", "AKIA").replaceAll("#", "X22XDD");
 		secretKey = secretKey.replace("%", "wramivs").replace("#", "ThiFyDQ").replace("$", "WsvxdhaW");
-		System.out.print(accessKey + " " + secretKey);
 		return new BasicAWSCredentials(accessKey, secretKey);
 	}
 
