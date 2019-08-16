@@ -4,10 +4,7 @@ import org.krsnaa.feedback.domain.Company;
 import org.krsnaa.feedback.domain.Designation;
 import org.krsnaa.feedback.domain.MedicalCenter;
 import org.krsnaa.feedback.domain.Region;
-import org.krsnaa.feedback.repository.CompanyRepository;
-import org.krsnaa.feedback.repository.DesignationRepository;
-import org.krsnaa.feedback.repository.MedicalCenterRepository;
-import org.krsnaa.feedback.repository.RegionRepository;
+import org.krsnaa.feedback.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,17 +16,20 @@ import java.util.List;
 @RequestMapping("/api/pub/lookup")
 public class LookupController {
 
-    @Autowired
-    private MedicalCenterRepository medicalCenterRepository;
+    final private MedicalCenterRepository medicalCenterRepository;
+    final private CompanyRepository companyRepository;
+    final private RegionRepository regionRepository;
+    final private DesignationRepository designationRepository;
+    final private EmployeeRepository employeeRepository;
 
     @Autowired
-    private CompanyRepository companyRepository;
-
-    @Autowired
-    private RegionRepository regionRepository;
-
-    @Autowired
-    private DesignationRepository designationRepository;
+    public LookupController(CompanyRepository companyRepository, RegionRepository regionRepository, DesignationRepository designationRepository, EmployeeRepository employeeRepository, MedicalCenterRepository medicalCenterRepository){
+        this.companyRepository = companyRepository;
+        this.regionRepository = regionRepository;
+        this.designationRepository = designationRepository;
+        this.employeeRepository = employeeRepository;
+        this.medicalCenterRepository = medicalCenterRepository;
+    }
 
     @GetMapping("/companies")
     public List<Company> getCompanies(){

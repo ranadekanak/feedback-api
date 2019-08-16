@@ -14,7 +14,6 @@ import org.krsnaa.feedback.repository.RegionRepository;
 import org.krsnaa.feedback.request.EmployeeDTO;
 import org.krsnaa.feedback.services.S3Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,27 +21,26 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/pub/")
 public class EmployeeController {
 
-    @Autowired
-    private CompanyRepository companyRepository;
+    final private CompanyRepository companyRepository;
+    final private RegionRepository regionRepository;
+    final private DesignationRepository designationRepository;
+    final private EmployeeRepository employeeRepository;
+    final private S3Wrapper awsService;
 
     @Autowired
-    private RegionRepository regionRepository;
-
-    @Autowired
-    private DesignationRepository designationRepository;
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
-    @Autowired
-    private S3Wrapper awsService;
+    public EmployeeController(CompanyRepository companyRepository, RegionRepository regionRepository, DesignationRepository designationRepository, EmployeeRepository employeeRepository, S3Wrapper awsService){
+        this.companyRepository = companyRepository;
+        this.regionRepository = regionRepository;
+        this.designationRepository = designationRepository;
+        this.employeeRepository = employeeRepository;
+        this.awsService = awsService;
+    }
 
     @GetMapping("/employees/{id}")
     public ResponseEntity getEmployee(@PathVariable(name = "id") Long id){
@@ -98,8 +96,6 @@ public class EmployeeController {
     @RequestMapping(value = "/employee/{id}/photo", method = RequestMethod.GET)
     public void download(@PathVariable(name = "id") Long employeeId, HttpServletResponse response) throws IOException {
         S3ObjectInputStream s3ObjectInputStream = awsService.download(employeeId.toString(), response);
-//        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
-
         IOUtils.copy(s3ObjectInputStream, response.getOutputStream());
     }
 }
