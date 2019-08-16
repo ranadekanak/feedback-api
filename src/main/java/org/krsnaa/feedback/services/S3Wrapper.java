@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -60,6 +61,7 @@ public class S3Wrapper {
 		return putObjectResult;
 	}
 
+	@Deprecated
 	public ResponseEntity<byte[]> download(String key) throws IOException {
 		GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, key);
 
@@ -77,6 +79,13 @@ public class S3Wrapper {
 		httpHeaders.setContentDispositionFormData("attachment", fileName);
 
 		return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
+	}
+
+	public S3ObjectInputStream download(String key, HttpServletResponse response) throws IOException {
+		GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, key);
+		S3Object s3Object = amazonS3Client.getObject(getObjectRequest);
+
+		return s3Object.getObjectContent();
 	}
 
 	public List<S3ObjectSummary> list() {

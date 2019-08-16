@@ -1,6 +1,8 @@
 package org.krsnaa.feedback.controller;
 
 import com.amazonaws.services.s3.model.PutObjectResult;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import org.apache.commons.io.IOUtils;
 import org.krsnaa.feedback.domain.Company;
 import org.krsnaa.feedback.domain.Designation;
 import org.krsnaa.feedback.domain.Employee;
@@ -12,10 +14,12 @@ import org.krsnaa.feedback.repository.RegionRepository;
 import org.krsnaa.feedback.request.EmployeeDTO;
 import org.krsnaa.feedback.services.S3Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +54,11 @@ public class EmployeeController {
     }
 
     @PostMapping("/employee")
-    public Employee saveEmployee(@RequestBody EmployeeDTO employeeDTO){
+    public ResponseEntity saveEmployee(@RequestBody EmployeeDTO employeeDTO){
+        Employee existingEmployee = employeeRepository.findByEmployeeCode(employeeDTO.getEmployeeCode());
+        if(existingEmployee == null){
+            return ResponseEntity.status(400).body("Employee already exists with code " + employeeDTO.getEmployeeCode());
+        }
         Employee employee = new Employee();
         employee.setCompanyId(companyRepository.findById(employeeDTO.getCompanyId()).orElse(new Company()));
         employee.setEmployeeCode(employeeDTO.getEmployeeCode());
@@ -64,7 +72,7 @@ public class EmployeeController {
         employee.setCreatedBy(1L);
         employee.setCreatedDate(new Date());
 
-        return employeeRepository.save(employee);
+        return ResponseEntity.ok(employeeRepository.save(employee));
 
     }
 
@@ -88,7 +96,10 @@ public class EmployeeController {
     }
 
     @RequestMapping(value = "/employee/{id}/photo", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> download(@PathVariable(name = "id") Long employeeId) throws IOException {
-        return awsService.download(""+employeeId);
+    public void download(@PathVariable(name = "id") Long employeeId, HttpServletResponse response) throws IOException {
+        S3ObjectInputStream s3ObjectInputStream = awsService.download(employeeId.toString(), response);
+//        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+
+        IOUtils.copy(s3ObjectInputStream, response.getOutputStream());
     }
 }
