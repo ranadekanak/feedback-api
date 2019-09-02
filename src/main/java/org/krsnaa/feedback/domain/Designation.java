@@ -10,7 +10,8 @@ import javax.persistence.*;
 public class Designation extends Audit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "Id")
+    private Integer id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "CompanyId", referencedColumnName = "Id")
@@ -22,11 +23,11 @@ public class Designation extends Audit {
     @Column(name = "DesignationName")
     private String designationName;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

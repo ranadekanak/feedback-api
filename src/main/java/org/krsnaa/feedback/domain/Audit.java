@@ -8,7 +8,7 @@ import java.util.Date;
 @MappedSuperclass
 public class Audit {
 
-    @Column(name = "CreatedBy")
+    @Column(name = "CreatedBy", nullable = false)
     private Long createdBy;
 
     @Column(name = "CreatedDate", nullable = false, updatable = false)
@@ -18,7 +18,7 @@ public class Audit {
     @Column(name = "ModifiedBy")
     private Long modifiedBy;
 
-    @Column(name = "ModifiedDate",nullable = false)
+    @Column(name = "ModifiedDate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
 

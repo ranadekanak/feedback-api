@@ -10,11 +10,12 @@ import javax.persistence.*;
 public class Employee extends Audit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "Id")
+    private Integer id;
 
     @OneToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "RegionId", referencedColumnName = "Id")
-    private Region regionId;
+    private Region region;
 
     @OneToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "CompanyId", referencedColumnName = "Id")
@@ -40,20 +41,20 @@ public class Employee extends Audit {
     private String profilePhotoPath;
 
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Region getRegionId() {
-        return regionId;
+    public Region getRegion() {
+        return region;
     }
 
-    public void setRegionId(Region regionId) {
-        this.regionId = regionId;
+    public void setRegion(Region region) {
+        this.region = region;
     }
 
     public Company getCompanyId() {

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import java.util.Date;
 
 @Entity
 @Table(name = "medicalcenter")
@@ -13,11 +11,12 @@ import java.util.Date;
 public class MedicalCenter extends Audit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "Id")
+    private Integer id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "RegionId", referencedColumnName = "Id")
-    private Region regionId;
+    private Region region;
 
     @Column(name = "CenterCode")
     private String centerCode;
@@ -25,21 +24,21 @@ public class MedicalCenter extends Audit {
     @Column(name = "CenterName")
     private String centerName;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
     @JsonIgnore
-    public Region getRegionId() {
-        return regionId;
+    public Region getRegion() {
+        return region;
     }
 
-    public void setRegionId(Region regionId) {
-        this.regionId = regionId;
+    public void setRegion(Region region) {
+        this.region = region;
     }
 
     public String getCenterCode() {

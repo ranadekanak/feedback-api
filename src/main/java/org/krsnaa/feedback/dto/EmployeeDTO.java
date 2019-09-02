@@ -1,10 +1,10 @@
-package org.krsnaa.feedback.request;
+package org.krsnaa.feedback.dto;
 
 public class EmployeeDTO {
 
-    private Long companyId;
+    private Integer companyId;
 
-    private Long regionId;
+    private Integer regionId;
 
     private String employeeCode;
 
@@ -14,21 +14,21 @@ public class EmployeeDTO {
 
     private String lastName;
 
-    private Long designationId;
+    private Integer designationId;
 
-    public Long getCompanyId() {
+    public Integer getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(Long companyId) {
+    public void setCompanyId(Integer companyId) {
         this.companyId = companyId;
     }
 
-    public Long getRegionId() {
+    public Integer getRegionId() {
         return regionId;
     }
 
-    public void setRegionId(Long regionId) {
+    public void setRegionId(Integer regionId) {
         this.regionId = regionId;
     }
 
@@ -64,11 +64,11 @@ public class EmployeeDTO {
         this.lastName = lastName;
     }
 
-    public Long getDesignationId() {
+    public Integer getDesignationId() {
         return designationId;
     }
 
-    public void setDesignationId(Long designationId) {
+    public void setDesignationId(Integer designationId) {
         this.designationId = designationId;
     }
 }

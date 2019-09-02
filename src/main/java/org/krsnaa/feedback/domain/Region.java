@@ -13,7 +13,8 @@ import java.util.Date;
 public class Region extends Audit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "Id")
+    private Integer id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "CompanyId", referencedColumnName = "Id")
@@ -27,11 +28,11 @@ public class Region extends Audit {
     @Column(name = "RegionName")
     private String regionName;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
