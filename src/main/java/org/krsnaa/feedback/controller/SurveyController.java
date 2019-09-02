@@ -32,16 +32,21 @@ public class SurveyController {
     @Autowired
     private AnswersRepository answersRepository;
 
-    @GetMapping("/survey/{id}")
-    public ResponseEntity getSurvey(@PathVariable(name = "id") Integer id){
+    @GetMapping("/survey/center/{id}")
+    public ResponseEntity getSurvey(@PathVariable(name = "id") Integer centerId){
         Map<String, Object> surveyResponse = new LinkedHashMap<>();
 
-        Optional<Survey> survey = surveyRepository.findById(id);
-        if(!survey.isPresent() || !survey.get().isStatus()){
+        Optional<MedicalCenter> center = medicalCenterRepository.findById(centerId);
+        if(!center.isPresent()){
+            return ResponseEntity.badRequest().body(new GenericResponse(HttpStatus.BAD_REQUEST.value(),"Medical Center does not exist"));
+        }
+
+        Collection<Survey> survey = surveyRepository.findByMedicalCenterAndStatusOrderByCreatedDateDesc(center.get(), Boolean.TRUE);
+        if(survey.isEmpty()){
             return ResponseEntity.badRequest().body(new GenericResponse(HttpStatus.BAD_REQUEST.value(), "Survey does not exist"));
         }
 
-        Survey existingSurvey = survey.get();
+        Survey existingSurvey = survey.stream().map(e -> e).findFirst().get();
         surveyResponse.put("id", existingSurvey.getId());
         surveyResponse.put("center", existingSurvey.getMedicalCenter());
         surveyResponse.put("name", existingSurvey.getSurveyName());

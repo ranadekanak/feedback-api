@@ -46,7 +46,7 @@ public class EmployeeController {
     public ResponseEntity getEmployee(@PathVariable(name = "id") Integer id){
         Optional<Employee> employee = employeeRepository.findById(id);
         if(!employee.isPresent()){
-            return ResponseEntity.status(400).body("No Record Found!");
+            return ResponseEntity.badRequest().body(new GenericResponse(HttpStatus.BAD_REQUEST.value(), "No Record Found!"));
         }
         return ResponseEntity.ok(employee.get());
     }
@@ -65,7 +65,7 @@ public class EmployeeController {
     public ResponseEntity saveEmployee(@RequestBody EmployeeDTO employeeDTO){
         Employee existingEmployee = employeeRepository.findByEmployeeCode(employeeDTO.getEmployeeCode());
         if(existingEmployee == null){
-            return ResponseEntity.status(400).body("Employee already exists with code " + employeeDTO.getEmployeeCode());
+            return ResponseEntity.badRequest().body(new GenericResponse(HttpStatus.BAD_REQUEST.value(), "Employee already exists with code " + employeeDTO.getEmployeeCode()));
         }
         Employee employee = new Employee();
         employee.setCompanyId(companyRepository.findById(employeeDTO.getCompanyId()).orElse(new Company()));
@@ -88,7 +88,7 @@ public class EmployeeController {
     public ResponseEntity saveEmployee(@PathVariable(name = "id") Integer id, @RequestParam("file") MultipartFile multipartFile){
         Employee employee = employeeRepository.findById(id).orElse(new Employee());
         if(employee.getId() == null){
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(new GenericResponse(HttpStatus.BAD_REQUEST.value(), "Employee does not exist"));
         }
         try {
             PutObjectResult result = awsService.upload(multipartFile.getInputStream(), employee.getId().toString());
@@ -97,7 +97,7 @@ public class EmployeeController {
             employee.setModifiedDate(new Date());
         } catch(Exception e){
             e.printStackTrace();
-            return ResponseEntity.status(500).body("Profile photo could not be saved");
+            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new GenericResponse(HttpStatus.BAD_GATEWAY.value(), "Profile photo could not be saved"));
         }
         return ResponseEntity.ok(employeeRepository.save(employee));
 

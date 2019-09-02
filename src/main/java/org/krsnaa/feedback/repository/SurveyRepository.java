@@ -14,6 +14,6 @@ public interface SurveyRepository extends JpaRepository<Survey, Integer> {
 
     Survey findByMedicalCenterAndSurveyName(MedicalCenter center, String surveyName);
 
-    Collection<Survey> findByMedicalCenter(MedicalCenter center);
+    Collection<Survey> findByMedicalCenterAndStatusOrderByCreatedDateDesc(MedicalCenter center, Boolean status);
 
 }
