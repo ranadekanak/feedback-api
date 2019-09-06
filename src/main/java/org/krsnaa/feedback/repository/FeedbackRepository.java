@@ -10,6 +10,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Integer> {
 
     Feedback findBySurvey(Survey survey);
 
-    Feedback findBySurveyAndPatientId(Survey survey, Integer patientId);
+    Feedback findBySurveyAndPatientMobileNoAndServiceAvailed(Survey survey, String patientMobileNo, String serviceAvailed);
 
 }

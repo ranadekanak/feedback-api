@@ -16,8 +16,20 @@ public class Feedback extends Audit {
     private Integer id;
 
     @NotNull
-    @Column(name = "PatientId")
-    private Integer patientId;
+    @Column(name = "PatientName")
+    private String patientName;
+
+    @NotNull
+    @Column(name = "PatientMobileNo")
+    private String patientMobileNo;
+
+    @NotNull
+    @Column(name = "PatientCategory")
+    private String patientCategory;
+
+    @NotNull
+    @Column(name = "ServiceAvailed")
+    private String serviceAvailed;
 
     @OneToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "SurveyId", referencedColumnName = "Id")
@@ -31,12 +43,36 @@ public class Feedback extends Audit {
         this.id = id;
     }
 
-    public Integer getPatientId() {
-        return patientId;
+    public String getPatientName() {
+        return patientName;
     }
 
-    public void setPatientId(Integer patientId) {
-        this.patientId = patientId;
+    public void setPatientName(String patientName) {
+        this.patientName = patientName;
+    }
+
+    public String getPatientMobileNo() {
+        return patientMobileNo;
+    }
+
+    public void setPatientMobileNo(String patientMobileNo) {
+        this.patientMobileNo = patientMobileNo;
+    }
+
+    public String getPatientCategory() {
+        return patientCategory;
+    }
+
+    public void setPatientCategory(String patientCategory) {
+        this.patientCategory = patientCategory;
+    }
+
+    public String getServiceAvailed() {
+        return serviceAvailed;
+    }
+
+    public void setServiceAvailed(String serviceAvailed) {
+        this.serviceAvailed = serviceAvailed;
     }
 
     public Survey getSurvey() {

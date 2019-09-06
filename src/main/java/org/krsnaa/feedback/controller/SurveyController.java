@@ -1,11 +1,8 @@
 package org.krsnaa.feedback.controller;
 
 import org.krsnaa.feedback.domain.*;
-import org.krsnaa.feedback.dto.AnswerDTO;
-import org.krsnaa.feedback.dto.GenericResponse;
+import org.krsnaa.feedback.dto.*;
 import org.krsnaa.feedback.repository.*;
-import org.krsnaa.feedback.dto.QuestionDTO;
-import org.krsnaa.feedback.dto.SurveyFormDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +30,7 @@ public class SurveyController {
     private AnswersRepository answersRepository;
 
     @GetMapping("/survey/center/{id}")
-    public ResponseEntity getSurvey(@PathVariable(name = "id") Integer centerId){
+    public ResponseEntity getSurveyForMedicalCenter(@PathVariable(name = "id") Integer centerId){
         Map<String, Object> surveyResponse = new LinkedHashMap<>();
 
         Optional<MedicalCenter> center = medicalCenterRepository.findById(centerId);
@@ -107,43 +104,54 @@ public class SurveyController {
         return ResponseEntity.ok().body(new GenericResponse(HttpStatus.OK.value(),"Survey created successfully"));
     }
 
-    @PostMapping("/survey/{id}/patient/{patientId}/answers")
-    public ResponseEntity saveFeedback(@PathVariable(name = "id") Integer id, @PathVariable(name = "patientId") Integer patientId, @RequestBody List<AnswerDTO> answerDTOS){
-        Optional<Survey> survey = surveyRepository.findById(id);
-        if(!survey.isPresent() || !survey.get().isStatus()){
-            return ResponseEntity.badRequest().body(new GenericResponse(HttpStatus.BAD_REQUEST.value(),"Survey does not exist"));
+    @PostMapping("/survey/center/{id}/answers")
+    public ResponseEntity saveFeedbackForMedicalCenter(@PathVariable(name = "id") Integer centerId, @RequestBody FeedbackFormDTO feedbackFormDTO){
+        Optional<MedicalCenter> center = medicalCenterRepository.findById(centerId);
+        if(!center.isPresent()){
+            return ResponseEntity.badRequest().body(new GenericResponse(HttpStatus.BAD_REQUEST.value(),"Medical Center does not exist"));
         }
 
-        Feedback existingFeedback = feedbackRepository.findBySurveyAndPatientId(survey.get(), patientId);
+        Collection<Survey> surveyList = surveyRepository.findByMedicalCenterAndStatusOrderByCreatedDateDesc(center.get(), Boolean.TRUE);
+        if(surveyList.isEmpty()){
+            return ResponseEntity.badRequest().body(new GenericResponse(HttpStatus.BAD_REQUEST.value(), "Survey does not exist"));
+        }
+
+        Survey survey = surveyList.stream().map(e -> e).findFirst().get();
+
+        Feedback existingFeedback = feedbackRepository.findBySurveyAndPatientMobileNoAndServiceAvailed(survey, feedbackFormDTO.getPatientMobileNo(), feedbackFormDTO.getServiceAvailed());
         if(existingFeedback != null){
             return ResponseEntity.badRequest().body(new GenericResponse(HttpStatus.BAD_REQUEST.value(),"Feedback for the survey has been already submitted by the patient"));
         }
 
         Feedback feedback = new Feedback();
-        feedback.setCreatedBy(new Long(patientId));
+        feedback.setCreatedBy(1L);
         feedback.setCreatedDate(new Date());
-        feedback.setSurvey(survey.get());
-        feedback.setPatientId(patientId);
+
+        feedback.setSurvey(survey);
+        feedback.setPatientName(feedbackFormDTO.getPatientName());
+        feedback.setPatientCategory(feedbackFormDTO.getPatientCategory());
+        feedback.setPatientMobileNo(feedbackFormDTO.getPatientMobileNo());
+        feedback.setServiceAvailed(feedbackFormDTO.getServiceAvailed());
         feedback = feedbackRepository.save(feedback);
 
-        Collection<Questions> questions = questionsRepository.findAllBySurveyOrderBySequence(survey.get());
-        if(questions == null || questions.size() != answerDTOS.size()){
+        Collection<Questions> questions = questionsRepository.findAllBySurveyOrderBySequence(survey);
+        if(questions == null || questions.size() != feedbackFormDTO.getAnswers().size()){
             return ResponseEntity.badRequest().body(new GenericResponse(HttpStatus.BAD_REQUEST.value(),"Please answer all the questions"));
         }
 
-        for(int i = 0; i < answerDTOS.size(); i++){
-            final AnswerDTO answerDTO = answerDTOS.get(i);
+        for(int i = 0; i < feedbackFormDTO.getAnswers().size(); i++){
+            final AnswerDTO answerDTO = feedbackFormDTO.getAnswers().get(i);
             Answers answer = new Answers();
             answer.setFeedback(feedback);
             answer.setQuestion(questions.stream().filter(e -> e.getId().equals(answerDTO.getQuestionId())).findFirst().get());
             answer.setResponse(answerDTO.getResponse());
-            answer.setCreatedBy(new Long(patientId));
+            answer.setCreatedBy(1L);
             answer.setCreatedDate(new Date());
 
             answersRepository.save(answer);
         }
 
-        return ResponseEntity.ok().body(new GenericResponse(HttpStatus.OK.value(),"Answers for survey with id "+id+" and patient with id "+patientId+" saved successfully"));
+        return ResponseEntity.ok().body(new GenericResponse(HttpStatus.OK.value(),"Answers for medical center with id "+centerId+" and patient with name "+feedbackFormDTO.getPatientName()+" saved successfully"));
     }
 
 }
