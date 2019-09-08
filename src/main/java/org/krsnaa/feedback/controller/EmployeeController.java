@@ -64,7 +64,7 @@ public class EmployeeController {
     @PostMapping("/employee")
     public ResponseEntity saveEmployee(@RequestBody EmployeeDTO employeeDTO){
         Employee existingEmployee = employeeRepository.findByEmployeeCode(employeeDTO.getEmployeeCode());
-        if(existingEmployee == null){
+        if(existingEmployee != null){
             return ResponseEntity.badRequest().body(new GenericResponse(HttpStatus.BAD_REQUEST.value(), "Employee already exists with code " + employeeDTO.getEmployeeCode()));
         }
         Employee employee = new Employee();
@@ -85,7 +85,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/employee/{id}")
-    public ResponseEntity saveEmployee(@PathVariable(name = "id") Integer id, @RequestParam("file") MultipartFile multipartFile){
+    public ResponseEntity saveEmployeePhoto(@PathVariable(name = "id") Integer id, @RequestParam("file") MultipartFile multipartFile){
         Employee employee = employeeRepository.findById(id).orElse(new Employee());
         if(employee.getId() == null){
             return ResponseEntity.badRequest().body(new GenericResponse(HttpStatus.BAD_REQUEST.value(), "Employee does not exist"));
