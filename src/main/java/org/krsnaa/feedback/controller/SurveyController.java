@@ -28,9 +28,12 @@ public class SurveyController {
 
     @Autowired
     private AnswersRepository answersRepository;
+    
+    @Autowired
+    private LanguageRepository langRepository;
 
     @GetMapping("/survey/center/{id}")
-    public ResponseEntity getSurveyForMedicalCenter(@PathVariable(name = "id") Integer centerId){
+    public ResponseEntity getSurveyForMedicalCenter(@PathVariable(name = "id") Integer centerId, @RequestParam(name = "lang") Optional<String> language){
         Map<String, Object> surveyResponse = new LinkedHashMap<>();
 
         Optional<MedicalCenter> center = medicalCenterRepository.findById(centerId);
@@ -53,7 +56,16 @@ public class SurveyController {
         Collection<Questions> questions = questionsRepository.findAllBySurveyOrderBySequence(existingSurvey);
         for(Questions question: questions){
             Map<String, Object> questionsWithAnswersMap = new LinkedHashMap<>();
-            questionsWithAnswersMap.put("question", question.getText());
+            if(language.isPresent()) {
+            	Language lang = langRepository.findByLanguageAndKey(language.get(), question.getText());
+            	if(lang != null) {
+            		questionsWithAnswersMap.put("question", lang.getValue());
+            	} else {
+                	questionsWithAnswersMap.put("question", question.getText());
+                }
+            } else {
+            	questionsWithAnswersMap.put("question", question.getText());
+            }
             questionsWithAnswersMap.put("type", question.getType());
             questionsWithAnswersMap.put("answer", null);
 
