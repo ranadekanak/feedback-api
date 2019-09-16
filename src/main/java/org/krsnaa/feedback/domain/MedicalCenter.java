@@ -32,7 +32,6 @@ public class MedicalCenter extends Audit {
         this.id = id;
     }
 
-    @JsonIgnore
     public Region getRegion() {
         return region;
     }
