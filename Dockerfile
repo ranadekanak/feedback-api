@@ -1,6 +1,6 @@
 FROM openjdk:8-jdk-alpine
 
-COPY target/feedback-api*.jar app.jar
+COPY target/*.jar app.jar
 
 COPY src/main/resources src/main/resources
 
