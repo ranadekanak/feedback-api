@@ -14,7 +14,7 @@ jobs:
           java-version: '8'
           distribution: 'temurin'
       - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots package
+        run: mvn clean install -DskipTests
       - name: Bump Version
         id: bump
         uses: nnichols/maven-version-bump-action@v3
